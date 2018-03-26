@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8FG-XG-AC6">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="gdk-gG-gnd">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -9,6 +9,22 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="jDm-zb-EUD">
+            <objects>
+                <navigationController id="gdk-gG-gnd" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="zww-FO-0kx">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="8FG-XG-AC6" kind="relationship" relationship="rootViewController" id="GfK-tB-va1"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kZp-IQ-JSH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1746" y="-14"/>
+        </scene>
         <!--Book List View Controller-->
         <scene sceneID="weg-bB-NaS">
             <objects>
@@ -32,10 +48,11 @@
                             <outlet property="delegate" destination="8FG-XG-AC6" id="0l8-Xg-xjn"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" id="S6r-5q-cje"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eU2-q0-UQA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-60" y="0.0"/>
+            <point key="canvasLocation" x="-833" y="-15"/>
         </scene>
     </scenes>
 </document>

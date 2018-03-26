@@ -4,24 +4,41 @@ import UIKit
 // MARK: - Book List (View and Controller)
 
 class BookListViewController: UITableViewController {
-
-    var totalPrice: Double = 0
-
     let bookStore = BookStore()
+
+    let loadingView = UIActivityIndicatorView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.navigationItem.title = "Book Shopping Cart ($\(self.totalPrice))"
+        self.loadingView.activityIndicatorViewStyle = .gray
+        self.loadingView.hidesWhenStopped = true
+        self.navigationController?.view.addSubview(self.loadingView)
+        self.loadingView.startAnimating()
+    }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.loadingView.center = (self.navigationController?.view.center)!
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         weak var weakSelf = self
-        self.bookStore.fetchData {
+
+        self.bookStore.fetchData { (error:Error?) -> (Void) in
+
+            if let aError = error {
+                let alert = UIAlertController(title: "Fetch data error", message: "Error:\(aError.localizedDescription)", preferredStyle: .alert)
+                let action = UIAlertAction(title: "OK", style: .default, handler:nil)
+
+                alert.addAction(action)
+                weakSelf?.present(alert, animated: true, completion: nil)
+            }
+
             weakSelf?.tableView.reloadData()
+            weakSelf?.loadingView.stopAnimating()
+            weakSelf?.navigationItem.title = "Book Shopping Cart ($\(weakSelf!.bookStore.totalBookPrice))"
         }
     }
     

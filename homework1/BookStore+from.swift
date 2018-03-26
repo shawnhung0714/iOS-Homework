@@ -10,7 +10,10 @@ public extension BookStore {
         }
         
         // Get books to buy
-        bookStore.fetchData {
+        bookStore.fetchData { (error : Error?) -> (Void) in
+            if let aError = error {
+                print("error : \(aError)")
+            }
         }
 
         return bookStore

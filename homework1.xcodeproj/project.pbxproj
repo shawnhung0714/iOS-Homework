@@ -85,16 +85,16 @@
 		4C1BB5FC20640D3C00BE2EE2 /* homework1 */ = {
 			isa = PBXGroup;
 			children = (
+				4C1BB60920640D3C00BE2EE2 /* Info.plist */,
+				4C1BB5FD20640D3C00BE2EE2 /* AppDelegate.swift */,
+				4C1BB62720641AA700BE2EE2 /* Book.swift */,
 				4C1BB61D20640D8300BE2EE2 /* Book+Comparable.swift */,
 				4C1BB61E20640D8300BE2EE2 /* BookListViewController.swift */,
 				4C1BB61F20640D8400BE2EE2 /* BookStore.swift */,
 				4C1BB62020640D8400BE2EE2 /* BookStore+from.swift */,
-				4C1BB5FD20640D3C00BE2EE2 /* AppDelegate.swift */,
-				4C1BB60120640D3C00BE2EE2 /* Main.storyboard */,
 				4C1BB60420640D3C00BE2EE2 /* Assets.xcassets */,
 				4C1BB60620640D3C00BE2EE2 /* LaunchScreen.storyboard */,
-				4C1BB60920640D3C00BE2EE2 /* Info.plist */,
-				4C1BB62720641AA700BE2EE2 /* Book.swift */,
+				4C1BB60120640D3C00BE2EE2 /* Main.storyboard */,
 			);
 			path = homework1;
 			sourceTree = "<group>";

@@ -16,7 +16,7 @@ public class BookStore {
     
     // MARK: Function interfacesc
 
-    public func fetchData(complete: @escaping () -> ()){
+    public func fetchData(complete: @escaping (Error?) -> (Void)) {
         DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async {
             // Get book from bookGetter
             var books = [Book]()
@@ -27,9 +27,9 @@ public class BookStore {
                 try books = self.getBookData(urlText: self.bookURL).map { (bookDict:[String: String]) -> Book in
                     let book = Book(title:bookDict["title"]!, author: bookDict["author"]!, price:Double(bookDict["price"]!)!)
                     return book
-                };
+                }
             } catch {
-                print("get books error:\(error)")
+                complete(error)
             }
 
             // Sort books
@@ -38,11 +38,8 @@ public class BookStore {
 
             for book in books {
                 authors.insert(book.author)
+                totalBookPrice += book.price
             }
-
-            totalBookPrice = books.reduce(0, { result, book in
-                result + book.price
-            })
 
             //assign value to property
             self.books = books
@@ -50,7 +47,7 @@ public class BookStore {
             self.authors = Array(authors)
 
             DispatchQueue.main.async {
-                complete()
+                complete(nil)
             }
         }
     }

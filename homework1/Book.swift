@@ -6,8 +6,6 @@
 //  Copyright © 2018 Shawn Hung. All rights reserved.
 //
 
-import UIKit
-
 public struct Book{
     var title: String
     var author: String
