@@ -11,21 +11,12 @@ import UIKit
 class MasterViewController: UITableViewController {
 
     var detailViewController: DetailViewController? = nil
-    var airports : [Airport]? = nil
 
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        if let url = Bundle.main.url(forResource: "airports", withExtension: "plist") {
-            let entries = NSArray(contentsOf: url)
-            airports = entries?.map({(dict:Any) in
-                Airport(fromDict:dict as! Dictionary<String, String>)
-            })
-        }
-    }
+    var store = AirportStore()
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,9 +29,14 @@ class MasterViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetail" {
             if let indexPath = tableView.indexPathForSelectedRow {
-                let airport = airports?[indexPath.row]
+                guard let country = store.countries?[indexPath.section] else {
+                    return
+                }
+                guard let airports = store.airportsIn(country: country) else {
+                    return
+                }
                 let detail = segue.destination as! DetailViewController
-                detail.airport = airport
+                detail.airport = airports[indexPath.row]
                 tableView.deselectRow(at: indexPath, animated: true)
             }
         }
@@ -49,25 +45,44 @@ class MasterViewController: UITableViewController {
     // MARK: - Table View
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return store.countries?.count ?? 0
+    }
+
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        guard let country = store.countries?[section] else {
+            return nil
+        }
+
+        return country
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let airports_unbox = airports {
-            return airports_unbox.count
-        }
-        else {
+        guard let country = store.countries?[section] else {
             return 0
         }
+        guard let airports = store.airportsIn(country: country) else {
+            return 0
+        }
+
+        return airports.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let airport = airports?[indexPath.row]
+
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.text = airport?.name
-        cell.detailTextLabel?.text = airport?.iata
+
+        guard let country = store.countries?[indexPath.section] else {
+            return cell
+        }
+        guard let airports = store.airportsIn(country: country) else {
+            return cell
+        }
+
+        let airport = airports[indexPath.row]
+        cell.textLabel?.text = airport.name
+        cell.detailTextLabel?.text = airport.iata
         let label = cell.viewWithTag(12345) as! UILabel
-        label.text = airport?.city
+        label.text = airport.city
         return cell
     }
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4CA6BD0220972BE2005A4F6A /* AirportStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA6BD0120972BE2005A4F6A /* AirportStore.swift */; };
 		4CDCBE35208CD60F00A88DC9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDCBE34208CD60F00A88DC9 /* AppDelegate.swift */; };
 		4CDCBE37208CD60F00A88DC9 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDCBE36208CD60F00A88DC9 /* MasterViewController.swift */; };
 		4CDCBE39208CD60F00A88DC9 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDCBE38208CD60F00A88DC9 /* DetailViewController.swift */; };
@@ -58,6 +59,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4CA6BD0120972BE2005A4F6A /* AirportStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirportStore.swift; sourceTree = "<group>"; };
 		4CDCBE31208CD60F00A88DC9 /* AirportList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirportList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CDCBE34208CD60F00A88DC9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4CDCBE36208CD60F00A88DC9 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 				4CDCBE3F208CD61100A88DC9 /* LaunchScreen.storyboard */,
 				4CDCBE42208CD61100A88DC9 /* Info.plist */,
 				4CDCBE9B208CDBB100A88DC9 /* Airport.swift */,
+				4CA6BD0120972BE2005A4F6A /* AirportStore.swift */,
 			);
 			path = AirportList;
 			sourceTree = "<group>";
@@ -316,6 +319,7 @@
 				4CDCBE39208CD60F00A88DC9 /* DetailViewController.swift in Sources */,
 				4CDCBE9C208CDBB100A88DC9 /* Airport.swift in Sources */,
 				4CDCBE37208CD60F00A88DC9 /* MasterViewController.swift in Sources */,
+				4CA6BD0220972BE2005A4F6A /* AirportStore.swift in Sources */,
 				4CDCBE35208CD60F00A88DC9 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
