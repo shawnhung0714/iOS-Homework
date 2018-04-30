@@ -19,11 +19,6 @@ class MasterViewController: UITableViewController {
         tableView.reloadData()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     // MARK: - Segues
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -35,7 +30,10 @@ class MasterViewController: UITableViewController {
                 guard let airports = store.airportsIn(country: country) else {
                     return
                 }
-                let detail = segue.destination as! DetailViewController
+                guard let detail = segue.destination as? DetailViewController else {
+                    return
+                }
+
                 detail.airport = airports[indexPath.row]
                 tableView.deselectRow(at: indexPath, animated: true)
             }

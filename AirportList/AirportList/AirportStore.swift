@@ -9,7 +9,7 @@
 import UIKit
 
 class AirportStore: NSObject {
-    var airportGroups: Dictionary<String, Array<Airport>>? = nil
+    var airportGroups: [String: [Airport]]? = nil
 
     public var countries: [String]? {
         get{
@@ -24,7 +24,9 @@ class AirportStore: NSObject {
                 Airport(fromDict:dict as! Dictionary<String, String>)
             })
 
-            airportGroups = Dictionary(grouping: airports!, by: {$0.country!})
+            if let airportList = airports {
+                airportGroups = Dictionary(grouping: airportList, by: {$0.country!})
+            }
         }
     }
 
