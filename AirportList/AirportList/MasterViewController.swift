@@ -47,11 +47,7 @@ class MasterViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        guard let country = store.countries?[section] else {
-            return nil
-        }
-
-        return country
+        return store.countries?[section] ?? nil
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
