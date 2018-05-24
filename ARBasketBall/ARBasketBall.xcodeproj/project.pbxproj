@@ -19,8 +19,6 @@
 		4C48DF7120B6159700620053 /* VirtualObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C48DF6D20B6159700620053 /* VirtualObject.swift */; };
 		4C48DF7320B6172100620053 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C48DF7220B6172100620053 /* Utilities.swift */; };
 		4C48DF7520B62B4900620053 /* VirtualObjectInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C48DF7420B62B4800620053 /* VirtualObjectInteraction.swift */; };
-		4C48DF7820B63DFB00620053 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C48DF7620B63DFB00620053 /* spark.png */; };
-		4C48DF7920B63DFB00620053 /* fire.scnp in Resources */ = {isa = PBXBuildFile; fileRef = 4C48DF7720B63DFB00620053 /* fire.scnp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,8 +36,6 @@
 		4C48DF6D20B6159700620053 /* VirtualObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualObject.swift; sourceTree = "<group>"; };
 		4C48DF7220B6172100620053 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		4C48DF7420B62B4800620053 /* VirtualObjectInteraction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualObjectInteraction.swift; sourceTree = "<group>"; };
-		4C48DF7620B63DFB00620053 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
-		4C48DF7720B63DFB00620053 /* fire.scnp */ = {isa = PBXFileReference; lastKnownFileType = file.scp; path = fire.scnp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,8 +87,6 @@
 			children = (
 				4C48DF5720B60AAF00620053 /* Assets.xcassets */,
 				4C48DF6520B6147900620053 /* Models.scnassets */,
-				4C48DF7620B63DFB00620053 /* spark.png */,
-				4C48DF7720B63DFB00620053 /* fire.scnp */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -173,11 +167,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C48DF7820B63DFB00620053 /* spark.png in Resources */,
 				4C48DF5B20B60AAF00620053 /* LaunchScreen.storyboard in Resources */,
 				4C48DF6620B6147900620053 /* Models.scnassets in Resources */,
 				4C48DF5820B60AAF00620053 /* Assets.xcassets in Resources */,
-				4C48DF7920B63DFB00620053 /* fire.scnp in Resources */,
 				4C48DF5620B60AAE00620053 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

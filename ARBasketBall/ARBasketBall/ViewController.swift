@@ -120,12 +120,6 @@ class ViewController: UIViewController {
             if !self.hasPlacedObject && !virtualObjectLoader.isLoading {
                 virtualObjectLoader.loadVirtualObject(ball, loadedHandler: { [unowned self] loadedObject in
                     
-                    guard let fire = SCNParticleSystem(named: "fire", inDirectory: nil) else {
-                        assert(false)
-                    }
-                                        
-                    loadedObject.addParticleSystem(fire)
-
                     DispatchQueue.main.async {
                         if self.placeVirtualObject(loadedObject) {
                             self.hasPlacedObject = true
