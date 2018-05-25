@@ -20,14 +20,6 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var sceneView: ARSCNView!
     
-    var focusSquare = FocusSquare()
-    
-    /// Coordinates the loading and unloading of reference nodes for virtual objects.
-    let virtualObjectLoader = VirtualObjectLoader()
-    lazy var virtualObjectInteraction = VirtualObjectInteraction(sceneView: sceneView)
-
-    let virtualObjects = VirtualObject.availableObjects
-    
     var hasPlacedObject = false
 
     /// Convenience accessor for the session owned by ARSCNView.
@@ -39,6 +31,15 @@ class ViewController: UIViewController {
         let bounds = sceneView.bounds
         return CGPoint(x: bounds.midX, y: bounds.midY)
     }
+    
+    var ball: SCNNode!
+    var hoop: SCNNode!
+    var targetCreationTime:TimeInterval = 0
+    var firstPlaneNode: SCNNode?
+    
+    var score = 0
+    
+    var isHit = false
     
     /// A serial queue used to coordinate adding or removing nodes from the scene.
     let updateQueue = DispatchQueue(label: "idv.shawn.ARBasketBall.serialSceneKitQueue")
@@ -58,22 +59,34 @@ class ViewController: UIViewController {
             """) // For details, see https://developer.apple.com/documentation/arkit
         }
         
-        // Set up scene content.
-        setupCamera()
-        sceneView.scene.rootNode.addChildNode(focusSquare)
+        setupBall()
+        setupHoop()
         
         // Set a delegate to track the number of plane anchors for providing UI feedback.
         sceneView.session.delegate = self
         
         // Show debug UI to view performance metrics (e.g. frames per second).
         sceneView.showsStatistics = true
+        
+        let tapGesture = UITapGestureRecognizer()
+        
+        tapGesture.numberOfTapsRequired = 1
+        tapGesture.numberOfTouchesRequired = 1
+        
+        sceneView.addGestureRecognizer(tapGesture)
+        sceneView.scene.physicsWorld.contactDelegate = self
+        
+        tapGesture.addTarget(self, action: #selector(didTap(recognizer:)))
+        
+        // Prevent the screen from being dimmed after a while as users will likely
+        // have long periods of interaction without touching the screen or buttons.
+        UIApplication.shared.isIdleTimerDisabled = true
+        
+        title = String(score)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        // Prevent the screen from being dimmed after a while as users will likely
-        // have long periods of interaction without touching the screen or buttons.
-        UIApplication.shared.isIdleTimerDisabled = true
         resetTracking()
     }
 
@@ -82,148 +95,151 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    // MARK: - Private methods
-    
-    private func setupCamera() {
-        guard let camera = sceneView.pointOfView?.camera else {
-            fatalError("Expected a valid `pointOfView` from the scene.")
-        }
-        
-        /*
-         Enable HDR camera settings for the most realistic appearance
-         with environmental lighting and physically based materials.
-         */
-        camera.wantsHDR = true
-        camera.exposureOffset = -1
-        camera.minimumExposure = -1
-        camera.maximumExposure = 3
-    }
-    
     /// Creates a new AR configuration to run on the `session`.
     private func resetTracking() {
         let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = [.horizontal]
+        configuration.planeDetection = [.vertical]
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
     }
     
-    private func updateFocusSquare() {
-        
-        // Perform hit testing only when ARKit tracking is in a good state.
-        if let camera = session.currentFrame?.camera, case .normal = camera.trackingState,
-            let result = self.sceneView.smartHitTest(screenCenter) {
-            updateQueue.async {
-                self.sceneView.scene.rootNode.addChildNode(self.focusSquare)
-                self.focusSquare.state = .detecting(hitTestResult: result, camera: camera)
-            }
-            
-            let ball = virtualObjects[0]
-            if !self.hasPlacedObject && !virtualObjectLoader.isLoading {
-                virtualObjectLoader.loadVirtualObject(ball, loadedHandler: { [unowned self] loadedObject in
-                    
-                    DispatchQueue.main.async {
-                        if self.placeVirtualObject(loadedObject) {
-                            self.hasPlacedObject = true
-                        }
-                    }
-                })
-            }
-        } else {
-            updateQueue.async {
-                self.focusSquare.state = .initializing
-                self.sceneView.pointOfView?.addChildNode(self.focusSquare)
-            }
-        }
+    private func setupBall() {
+        let scene = SCNScene(named: "Models.scnassets/basketball/basketball.scn")!
+        ball = scene.rootNode.childNode(withName: "Ball", recursively: true)
+        ball.simdScale = float3(0.01, 0.01, 0.01)
+        ball.simdPosition = float3(0, 0, -0.5)
+        ball.physicsBody = .dynamic()
+        ball.physicsBody?.categoryBitMask = CollisionMask.ball.rawValue
+        ball.physicsBody?.collisionBitMask = CollisionMask.board.rawValue | CollisionMask.ring.rawValue
+        ball.physicsBody?.contactTestBitMask = CollisionMask.net.rawValue
     }
     
-    private func placeVirtualObject(_ virtualObject: VirtualObject) -> Bool {
-        guard let cameraTransform = session.currentFrame?.camera.transform,
-            let focusSquareAlignment = focusSquare.recentFocusSquareAlignments.last,
-            focusSquare.state != .initializing else {
-                NSLog("CANNOT PLACE OBJECT\nTry moving left or right.")
-                return false
-        }
+    private func setupHoop() {
+        let scene = SCNScene(named: "Models.scnassets/basketball_hoop/basketball_hoop.scn")!
+        hoop = scene.rootNode.childNode(withName: "Hoop", recursively: true)
+        hoop.simdScale = float3(0.0005, 0.0005, 0.0005)
+        let ring = hoop?.childNode(withName: "Ring", recursively: true)
+        let ringShape = SCNPhysicsShape(geometry: (ring?.geometry)!, options: [.type: SCNPhysicsShape.ShapeType.concavePolyhedron, .scale: SCNVector3(x: 0.1, y: 0.1, z: 0.1)])
         
-        // The focus square transform may contain a scale component, so reset scale to 1
-        let focusSquareScaleInverse = 1.0 / focusSquare.simdScale.x
-        let scaleMatrix = float4x4(uniformScale: focusSquareScaleInverse)
-        let focusSquareTransformWithoutScale = focusSquare.simdWorldTransform * scaleMatrix
+        ring?.physicsBody? = SCNPhysicsBody(type: .kinematic, shape: ringShape)
+        ring?.physicsBody?.categoryBitMask = CollisionMask.ring.rawValue
         
-        virtualObjectInteraction.selectedObject = virtualObject
-        virtualObject.setTransform(focusSquareTransformWithoutScale,
-                                   relativeTo: cameraTransform,
-                                   smoothMovement: false,
-                                   alignment: focusSquareAlignment,
-                                   allowAnimation: false)
+        let net = hoop?.childNode(withName: "Net", recursively: true)
+        net?.physicsBody? = SCNPhysicsBody.kinematic()
+        net?.physicsBody?.categoryBitMask = CollisionMask.net.rawValue
+        net?.physicsBody?.collisionBitMask = 0
+        net?.physicsBody?.contactTestBitMask = CollisionMask.ball.rawValue
         
-        updateQueue.async {
-            self.sceneView.scene.rootNode.addChildNode(virtualObject)
-            self.sceneView.addOrUpdateAnchor(for: virtualObject)
-        }
+        let board = hoop?.childNode(withName: "Board", recursively: true)
+        board?.physicsBody? = SCNPhysicsBody.kinematic()
+        board?.physicsBody?.categoryBitMask = CollisionMask.board.rawValue
+    }
+    
+    @objc func didTap(recognizer:UITapGestureRecognizer) {
+        guard let currentTransform = session.currentFrame?.camera.transform else { return }
         
-        return true
+        var translation = matrix_identity_float4x4
+        
+        //Change The X Value
+        translation.columns.3.x = 0
+        
+        //Change The Y Value
+        translation.columns.3.y = 0
+        
+        //Change The Z Value
+        translation.columns.3.z = -2
+        
+        ball.simdTransform = matrix_multiply(matrix_multiply(currentTransform, translation), ball.simdTransform)
+        sceneView.scene.rootNode.addChildNode(ball)
+        
+        let relatedForce = simd_mul(currentTransform, float4(-7, 0, -15, 0))
+        
+        ball.physicsBody?.applyForce(SCNVector3(relatedForce.x , relatedForce.y, relatedForce.z), asImpulse: true)
     }
 }
 
+
 extension ViewController:ARSCNViewDelegate {
+    
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
-        updateQueue.async {
-            for object in self.virtualObjectLoader.loadedObjects {
-                object.adjustOntoPlaneAnchor(planeAnchor, using: node)
-            }
+
+        if firstPlaneNode == nil && planeAnchor.alignment == .vertical {
+            firstPlaneNode = SCNNode()
+            firstPlaneNode?.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
+            
+            // `SCNPlane` is vertically oriented in its local coordinate space, so
+            // rotate the plane to match the horizontal orientation of `ARPlaneAnchor`.
+            firstPlaneNode?.eulerAngles.x = -.pi / 2
+            
+            // Add the plane visualization to the ARKit-managed node so that it tracks
+            // changes in the plane anchor as plane estimation continues.
+            node.addChildNode(firstPlaneNode!)
+            firstPlaneNode?.addChildNode(hoop)
         }
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        updateQueue.async {
-            if let planeAnchor = anchor as? ARPlaneAnchor {
-                for object in self.virtualObjectLoader.loadedObjects {
-                    object.adjustOntoPlaneAnchor(planeAnchor, using: node)
-                }
-            } else {
-                if let objectAtAnchor = self.virtualObjectLoader.loadedObjects.first(where: { $0.anchor == anchor }) {
-                    objectAtAnchor.simdPosition = anchor.transform.translation
-                    objectAtAnchor.anchor = anchor
-                }
-            }
-        }
+        // Update content only for plane anchors and nodes matching the setup created in `renderer(_:didAdd:for:)`.
+        guard let planeAnchor = anchor as?  ARPlaneAnchor,
+            let planeNode = node.childNodes.first,
+            let plane = planeNode.geometry as? SCNPlane
+            else { return }
+        
+        // Plane estimation may shift the center of a plane relative to its anchor's transform.
+        planeNode.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
+        
+        // Plane estimation may also extend planes, or remove one plane to merge its extent into another.
+        plane.width = CGFloat(planeAnchor.extent.x)
+        plane.height = CGFloat(planeAnchor.extent.z)
     }
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-        DispatchQueue.main.async {
-            self.virtualObjectInteraction.updateObjectToCurrentTrackingPosition()
-            self.updateFocusSquare()
-        }
-        
-        // If light estimation is enabled, update the intensity of the model's lights and the environment map
-        let baseIntensity: CGFloat = 40
-        let lightingEnvironment = sceneView.scene.lightingEnvironment
-        if let lightEstimate = session.currentFrame?.lightEstimate {
-            lightingEnvironment.intensity = lightEstimate.ambientIntensity / baseIntensity
-        } else {
-            lightingEnvironment.intensity = baseIntensity
+        if ball.parent != nil && ball.presentation.simdWorldPosition.y < -2 {
+            ball.removeFromParentNode()
+            if isHit {
+                score += 1
+                DispatchQueue.main.async {
+                    self.title = String(self.score)
+                }
+                isHit = false
+            }
+            setupBall()
         }
     }
 }
 
 extension ViewController:ARSessionDelegate {
-    // MARK: - ARSessionObserver
-    
     func sessionWasInterrupted(_ session: ARSession) {
         // Inform the user that the session has been interrupted, for example, by presenting an overlay.
-        NSLog("Session was interrupted")
+        print("Session was interrupted")
     }
     
     func sessionInterruptionEnded(_ session: ARSession) {
         // Reset tracking and/or remove existing anchors if consistent tracking is required.
-        NSLog("Session interruption ended")
+        print("Session interruption ended")
         resetTracking()
     }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
         // Present an error message to the user.
-        NSLog("Session failed: \(error.localizedDescription)")
+        print("Session failed: \(error.localizedDescription)")
         resetTracking()
+    }
+    
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        print("Adding anchor")
+    }
+}
+
+extension ViewController: SCNPhysicsContactDelegate {
+    func physicsWorld(_ world: SCNPhysicsWorld, didEnd contact: SCNPhysicsContact) {
+        let nodes = [contact.nodeA, contact.nodeB]
+        guard let net = hoop.childNode(withName: "Net", recursively: true) else {
+            return
+        }
+        if nodes.contains(ball) && nodes.contains(net) {
+            isHit = true
+        }
     }
 }
 

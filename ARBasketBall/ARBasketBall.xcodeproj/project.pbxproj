@@ -13,12 +13,6 @@
 		4C48DF5820B60AAF00620053 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C48DF5720B60AAF00620053 /* Assets.xcassets */; };
 		4C48DF5B20B60AAF00620053 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C48DF5920B60AAF00620053 /* LaunchScreen.storyboard */; };
 		4C48DF6620B6147900620053 /* Models.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C48DF6520B6147900620053 /* Models.scnassets */; };
-		4C48DF6E20B6159700620053 /* FocusSquareSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C48DF6920B6159700620053 /* FocusSquareSegment.swift */; };
-		4C48DF6F20B6159700620053 /* FocusSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C48DF6A20B6159700620053 /* FocusSquare.swift */; };
-		4C48DF7020B6159700620053 /* VirtualObjectLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C48DF6C20B6159700620053 /* VirtualObjectLoader.swift */; };
-		4C48DF7120B6159700620053 /* VirtualObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C48DF6D20B6159700620053 /* VirtualObject.swift */; };
-		4C48DF7320B6172100620053 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C48DF7220B6172100620053 /* Utilities.swift */; };
-		4C48DF7520B62B4900620053 /* VirtualObjectInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C48DF7420B62B4800620053 /* VirtualObjectInteraction.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,12 +24,6 @@
 		4C48DF5A20B60AAF00620053 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4C48DF5C20B60AAF00620053 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4C48DF6520B6147900620053 /* Models.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Models.scnassets; sourceTree = "<group>"; };
-		4C48DF6920B6159700620053 /* FocusSquareSegment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusSquareSegment.swift; sourceTree = "<group>"; };
-		4C48DF6A20B6159700620053 /* FocusSquare.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusSquare.swift; sourceTree = "<group>"; };
-		4C48DF6C20B6159700620053 /* VirtualObjectLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualObjectLoader.swift; sourceTree = "<group>"; };
-		4C48DF6D20B6159700620053 /* VirtualObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualObject.swift; sourceTree = "<group>"; };
-		4C48DF7220B6172100620053 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
-		4C48DF7420B62B4800620053 /* VirtualObjectInteraction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualObjectInteraction.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,10 +56,6 @@
 		4C48DF4F20B60AAE00620053 /* ARBasketBall */ = {
 			isa = PBXGroup;
 			children = (
-				4C48DF7420B62B4800620053 /* VirtualObjectInteraction.swift */,
-				4C48DF7220B6172100620053 /* Utilities.swift */,
-				4C48DF6820B6159700620053 /* Focus Square */,
-				4C48DF6B20B6159700620053 /* Virtual Objects */,
 				4C48DF6720B6157600620053 /* Resources */,
 				4C48DF5020B60AAE00620053 /* AppDelegate.swift */,
 				4C48DF5220B60AAE00620053 /* ViewController.swift */,
@@ -89,24 +73,6 @@
 				4C48DF6520B6147900620053 /* Models.scnassets */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		4C48DF6820B6159700620053 /* Focus Square */ = {
-			isa = PBXGroup;
-			children = (
-				4C48DF6920B6159700620053 /* FocusSquareSegment.swift */,
-				4C48DF6A20B6159700620053 /* FocusSquare.swift */,
-			);
-			path = "Focus Square";
-			sourceTree = "<group>";
-		};
-		4C48DF6B20B6159700620053 /* Virtual Objects */ = {
-			isa = PBXGroup;
-			children = (
-				4C48DF6C20B6159700620053 /* VirtualObjectLoader.swift */,
-				4C48DF6D20B6159700620053 /* VirtualObject.swift */,
-			);
-			path = "Virtual Objects";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -182,13 +148,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C48DF5320B60AAE00620053 /* ViewController.swift in Sources */,
-				4C48DF6F20B6159700620053 /* FocusSquare.swift in Sources */,
-				4C48DF7320B6172100620053 /* Utilities.swift in Sources */,
-				4C48DF7120B6159700620053 /* VirtualObject.swift in Sources */,
-				4C48DF7020B6159700620053 /* VirtualObjectLoader.swift in Sources */,
-				4C48DF6E20B6159700620053 /* FocusSquareSegment.swift in Sources */,
 				4C48DF5120B60AAE00620053 /* AppDelegate.swift in Sources */,
-				4C48DF7520B62B4900620053 /* VirtualObjectInteraction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
