@@ -8,6 +8,7 @@
 
 import UIKit
 import ARKit
+import FirebaseDatabase
 
 enum CollisionMask: Int {
     case ball = 1
@@ -40,6 +41,8 @@ class ViewController: UIViewController {
     var score = 0
     
     var isHit = false
+    
+    var dbRef: DatabaseReference!
     
     /// A serial queue used to coordinate adding or removing nodes from the scene.
     let updateQueue = DispatchQueue(label: "idv.shawn.ARBasketBall.serialSceneKitQueue")
@@ -83,11 +86,29 @@ class ViewController: UIViewController {
         UIApplication.shared.isIdleTimerDisabled = true
         
         title = String(score)
+        
+        dbRef = Database.database().reference()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         resetTracking()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if score > 0 {
+            dbRef.child("History").observeSingleEvent(of: .value) { (snapshot:DataSnapshot) in
+                var entries = snapshot.value as? [Int]
+                if entries == nil {
+                    entries = [Int]()
+                }
+                entries?.append(self.score)
+                self.dbRef.child("History").setValue(entries)
+                self.score = 0
+                self.title = "\(self.score)"
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -135,6 +156,12 @@ class ViewController: UIViewController {
     }
     
     @objc func didTap(recognizer:UITapGestureRecognizer) {
+        
+        if ball.parent != nil {
+            ball.removeFromParentNode()
+            setupBall()
+        }
+        
         guard let currentTransform = session.currentFrame?.camera.transform else { return }
         
         var translation = matrix_identity_float4x4

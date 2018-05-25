@@ -40,17 +40,32 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="wrS-6D-56K"/>
                                 </connections>
                             </arscnView>
+                            <button opaque="NO" userInteractionEnabled="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lh0-sY-48N">
+                                <rect key="frame" x="166.5" y="581" width="41" height="30"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Shoot">
+                                    <color key="titleColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
+                                </state>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="vZd-mF-hDa" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="2uK-G8-AML"/>
+                            <constraint firstItem="lh0-sY-48N" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="7AL-l2-lXh"/>
                             <constraint firstItem="vZd-mF-hDa" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="cLX-Mr-UR0"/>
                             <constraint firstItem="vZd-mF-hDa" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="oaH-yo-glC"/>
                             <constraint firstItem="vZd-mF-hDa" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="yKQ-NY-T5F"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="lh0-sY-48N" secondAttribute="bottom" constant="56" id="ybj-iP-tpa"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" id="gCb-Fx-1u5"/>
+                    <navigationItem key="navigationItem" id="gCb-Fx-1u5">
+                        <barButtonItem key="rightBarButtonItem" title="History" id="d5y-Yc-GUI">
+                            <connections>
+                                <segue destination="dUE-YS-9t1" kind="show" id="dGs-aR-Iqc"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="sceneView" destination="vZd-mF-hDa" id="s8q-ha-qEU"/>
                     </connections>
@@ -58,6 +73,35 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="136.80000000000001" y="133.5832083958021"/>
+        </scene>
+        <!--Title-->
+        <scene sceneID="If3-ka-4eP">
+            <objects>
+                <tableViewController id="dUE-YS-9t1" customClass="HistoryViewController" customModule="ARBasketBall" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="O9B-iS-FFq">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="HistoryCell" id="TIv-GD-e0p">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="TIv-GD-e0p" id="D9z-Zq-MYB">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="dUE-YS-9t1" id="cof-HI-pMQ"/>
+                            <outlet property="delegate" destination="dUE-YS-9t1" id="6uV-de-dwi"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Title" id="dXn-Ju-eLB"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Dl1-Mc-9hx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="832" y="134"/>
         </scene>
     </scenes>
 </document>
