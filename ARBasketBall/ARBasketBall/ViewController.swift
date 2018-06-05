@@ -9,6 +9,7 @@
 import UIKit
 import ARKit
 import FirebaseDatabase
+import SceneKit
 
 enum CollisionMask: Int {
     case ball = 1
@@ -164,6 +165,7 @@ class ViewController: UIViewController {
         
         guard let currentTransform = session.currentFrame?.camera.transform else { return }
         
+        
         var translation = matrix_identity_float4x4
         
         //Change The X Value
@@ -173,12 +175,15 @@ class ViewController: UIViewController {
         translation.columns.3.y = 0
         
         //Change The Z Value
-        translation.columns.3.z = -2
+        translation.columns.3.z = -1
         
-        ball.simdTransform = matrix_multiply(matrix_multiply(currentTransform, translation), ball.simdTransform)
+        //model to view matrix
+        ball.simdTransform = currentTransform * translation * ball.simdTransform
         sceneView.scene.rootNode.addChildNode(ball)
         
-        let relatedForce = simd_mul(currentTransform, float4(-7, 0, -15, 0))
+        let forceScale = Float(15)
+        let angle = Float(30.0/180*Double.pi)
+        let relatedForce = currentTransform * simd_float4x4(SCNMatrix4Rotate(SCNMatrix4Identity, Float.pi / 2, 0, 0, 1)) * float4(0, forceScale*sin(angle), -forceScale*cos(angle), 1)
         
         ball.physicsBody?.applyForce(SCNVector3(relatedForce.x , relatedForce.y, relatedForce.z), asImpulse: true)
     }
